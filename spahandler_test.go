@@ -110,3 +110,21 @@ func TestSpaHandler_HandlerFunc(t *testing.T) {
 	handler.HandlerFunc()(resp, req)
 	assert.Equal(t, "abc",  resp.Body.String())
 }
+
+
+func TestSpaHandler_HandleNoPath(t *testing.T) {
+	handler := NewSpaHandler(
+		SpaOptions{
+			IgnorePrefix:    "api",
+			DefaultResource: "index.html",
+			ContentProvider: fileContentProvider{
+				root: "./test",
+			},
+		})
+
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	resp := httptest.NewRecorder()
+
+	handler.HandlerFunc()(resp, req)
+	assert.Equal(t, 302, resp.Code)
+}

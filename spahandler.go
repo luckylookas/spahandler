@@ -42,7 +42,7 @@ func (handler spaHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	content, err := handler.contentProvider.Get(path)
 
-	if errors.Is(err, ERRNOTFOUND) && path != handler.defaultResource {
+	if (errors.Is(err, ERRNOTFOUND) && path != handler.defaultResource) || path == ""{
 		http.Redirect(w, r, "/" + handler.defaultResource, 302)
 		return
 	}
