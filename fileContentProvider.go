@@ -8,40 +8,32 @@ import (
 	"strings"
 )
 
+type contentProvider func(id string) (io.ReadCloser, error)
+
 const octetStream = "application/octet-stream"
 
-func newDefaultFileContentProvider() fileContentProvider {
-	return fileContentProvider{
-		root: DEFAULT_CONTENT_ROOT,
+func getContentProvider(root string) contentProvider {
+	return func(id string) (io.ReadCloser, error) {
+		f, err := os.Open(fmt.Sprintf("%s%c%s", root, os.PathSeparator, id))
+		if err != nil {
+			return nil, fmt.Errorf("%v: %w", err, ERRNOTFOUND)
+		}
+		return f, nil
 	}
-}
-
-type fileContentProvider struct {
-	root string
-}
-
-func (provider fileContentProvider) CType(id string) string {
-	ctype := getCType(id)
-	// this is not done by the mime package implementation
-	if ctype == "" {
-		return octetStream
-	}
-	return ctype
-}
-
-func (provider fileContentProvider) Get(id string) (io.ReadCloser, error) {
-	f, err := os.Open(fmt.Sprintf("%s%c%s", provider.root, os.PathSeparator, id))
-	if err != nil {
-		return nil, fmt.Errorf("%v: %w", err, ERRNOTFOUND)
-	}
-	return f, nil
 }
 
 func getCType(id string) string {
+	if id == "" {
+		return octetStream
+	}
 	seperatorIndex := strings.LastIndex(id, ".")
 	if seperatorIndex == -1 {
 		return octetStream
 	}
 	ext := id[seperatorIndex:]
-	return mime.TypeByExtension(ext)
+	ctype := mime.TypeByExtension(ext)
+	if ctype == "" {
+		return octetStream
+	}
+	return ctype
 }

@@ -19,8 +19,8 @@ jobs:
       uses: actions/checkout@94c2de77cccf605d74201a8aec6dd8fc0717ad66
     - name: vet
       run: go vet
-    - name: test
-      run: go test --coverprofile coverage.txt
+    - name: webapp
+      run: go webapp --coverprofile coverage.txt
     - name: Upload Coverage report to CodeCov
       uses: codecov/codecov-action@v1.0.0
       with:
