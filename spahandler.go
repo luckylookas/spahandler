@@ -44,6 +44,7 @@ func NewSpaHandlerFunc (options SpaOptions) http.HandlerFunc {
 
 		if (errors.Is(err, ERRNOTFOUND) && path != default_resource) || path == "" {
 			content, err = contentProvider(default_resource)
+			path = default_resource
 		}
 		if errors.Is(err, ERRNOTFOUND) {
 			mergedOptions.FailureHandler(w, r)

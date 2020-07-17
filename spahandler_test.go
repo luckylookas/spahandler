@@ -21,6 +21,7 @@ func TestSpaHandler_ServeHTTP_respondWithIndexOnUnknown(t *testing.T) {
 	resp := httptest.NewRecorder()
 	handler(resp, req)
 	assert.Equal(t, "abc",  resp.Body.String())
+	assert.Contains(t, resp.Header().Get("Content-Type"), "text/html")
 	assert.Equal(t, 200, resp.Code)
 }
 
@@ -41,6 +42,8 @@ func TestSpaHandler_HandleNoPath_repondIndex(t *testing.T) {
 	resp := httptest.NewRecorder()
 	handler(resp, req)
 	assert.Equal(t, 200, resp.Code)
+	assert.Contains(t, resp.Header().Get("Content-Type"), "text/html")
+
 	assert.Equal(t, "abc",  resp.Body.String())
 
 }
