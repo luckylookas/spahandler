@@ -15,12 +15,13 @@ func TestSpaHandler_ServeHTTP_happyCase(t *testing.T) {
 	assert.Equal(t, "abc",  resp.Body.String())
 }
 
-func TestSpaHandler_ServeHTTP_redirectUnknown(t *testing.T) {
+func TestSpaHandler_ServeHTTP_respondWithIndexOnUnknown(t *testing.T) {
 	handler := NewDefaultSpaHandlerFunc()
 	req := httptest.NewRequest(http.MethodGet, "/main.js", nil)
 	resp := httptest.NewRecorder()
 	handler(resp, req)
-	assert.Equal(t, 302, resp.Code)
+	assert.Equal(t, "abc",  resp.Body.String())
+	assert.Equal(t, 200, resp.Code)
 }
 
 func TestSpaHandler_ServeHTTP_noDefaultAndUnkownPath(t *testing.T) {
@@ -31,13 +32,15 @@ func TestSpaHandler_ServeHTTP_noDefaultAndUnkownPath(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/main.js", nil)
 	resp := httptest.NewRecorder()
 	handler(resp, req)
-	assert.Equal(t, 302, resp.Code)
+	assert.Equal(t, 404, resp.Code)
 }
 
-func TestSpaHandler_HandleNoPath(t *testing.T) {
+func TestSpaHandler_HandleNoPath_repondIndex(t *testing.T) {
 	handler := NewDefaultSpaHandlerFunc()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	resp := httptest.NewRecorder()
 	handler(resp, req)
-	assert.Equal(t, 302, resp.Code)
+	assert.Equal(t, 200, resp.Code)
+	assert.Equal(t, "abc",  resp.Body.String())
+
 }

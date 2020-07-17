@@ -31,8 +31,6 @@ func TestFileContentProvider_CType(t *testing.T) {
 	assert.Equal(t, "application/octet-stream", getCType("webapp.stuffy"))
 	assert.Equal(t, "application/octet-stream", getCType(""))
 	assert.Equal(t, "application/octet-stream", getCType("word"))
-
-
 }
 
 func TestFileContentProvider_GetNotFound(t *testing.T) {

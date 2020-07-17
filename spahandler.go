@@ -43,8 +43,7 @@ func NewSpaHandlerFunc (options SpaOptions) http.HandlerFunc {
 		content, err := contentProvider(path)
 
 		if (errors.Is(err, ERRNOTFOUND) && path != default_resource) || path == "" {
-			http.Redirect(w, r, "/" + default_resource, 302)
-			return
+			content, err = contentProvider(default_resource)
 		}
 		if errors.Is(err, ERRNOTFOUND) {
 			mergedOptions.FailureHandler(w, r)
